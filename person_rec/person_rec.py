@@ -26,6 +26,18 @@ from ecal.core.subscriber import ProtoSubscriber
 sys.path.insert(1, os.path.join(sys.path[0], '../_protobuf'))
 import person_pb2
 
+#def callback(topic_name, person, time):
+#  print("")
+#  print("Received person ..")
+#  print("person id    : {}".format(person.id))
+#  print("person name  : {}".format(person.name))
+#  print("person stype : {}".format(person.stype))
+#  print("person email : {}".format(person.email))
+#  print("dog.name     : {}".format(person.dog.name))
+#  print("house.rooms  : {}".format(person.house.rooms))
+
+
+
 def main():
   # print eCAL version and date
   print("eCAL {} ({})\n".format(ecal_core.getversion(),ecal_core.getdate()))

@@ -24,9 +24,27 @@ import ecal.core.core as ecal_core
 from ecal.core.publisher import ProtoPublisher
 from ecal.core.subscriber import ProtoSubscriber
 
+import libioplus as relay_shield
+
 #sys.path.insert(1, os.path.join(sys.path[0], '../_protobuf'))
 
 import UXDC_Honk_pb2
+
+#def callback(topic_name, person, time):
+#  print("")
+#  print("Received person ..")
+#  print("person id    : {}".format(person.id))
+#  print("person name  : {}".format(person.name))
+#  print("person stype : {}".format(person.stype))
+#  print("person email : {}".format(person.email))
+#  print("dog.name     : {}".format(person.dog.name))
+#  print("house.rooms  : {}".format(person.house.rooms))
+def blinker_toggle():
+  relay_shield.setRelayCh(0, 1, 1)
+  time.sleep(0.2)
+  relay_shield.setRelayCh(0, 1, 0)
+
+
 
 def main():
   # print eCAL version and date
@@ -44,22 +62,26 @@ def main():
   status = UXDC_Honk_pb2.HONK_Status()
   status.alive_counter = 0
   
-  # create person instance and set content
-  #person = person_pb2.Person()
-  #person.name        = "Max"
-  #person.stype       = person_pb2.Person.MALE
-  #person.email       = "max@mail.net"
-  #person.dog.name    = "Brandy"
-  #person.house.rooms = 4
+  isblinking = False
+
+  # create subscriber and connect callback
+  #sub = ProtoSubscriber("person", person_pb2.Person)
+  #sub.set_callback(callback)  
   
   # send messages
   while ecal_core.ok():
   
     status.alive_counter = status.alive_counter + 1
-    pub_status.send(status)
+
+    blinker_toggle()
+    isblinking = not isblinking
+    print(isblinking)
     
+    status.hazard_blinker_active = isblinking
+    
+    pub_status.send(status)
     # sleep 100 ms
-    time.sleep(0.5)
+    time.sleep(1.0)
   
   
   

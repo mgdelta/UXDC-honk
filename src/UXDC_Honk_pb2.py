@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='UXDC.Honk',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x0fUXDC_Honk.proto\x12\tUXDC.Honk\"$\n\x0bHONK_Status\x12\x15\n\ralive_counter\x18\x01 \x01(\r\"a\n\x08SetEvent\x12\x37\n\tsendevent\x18\x01 \x01(\x0e\x32$.UXDC.Honk.SetEvent.EventCommandList\"\x1c\n\x10\x45ventCommandList\x12\x08\n\x04NONE\x10\x00\x62\x06proto3')
+  serialized_pb=_b('\n\x0fUXDC_Honk.proto\x12\tUXDC.Honk\"C\n\x0bHONK_Status\x12\x15\n\ralive_counter\x18\x01 \x01(\r\x12\x1d\n\x15hazard_blinker_active\x18\x02 \x01(\x08\"|\n\x08SetEvent\x12\x37\n\tsendevent\x18\x01 \x01(\x0e\x32$.UXDC.Honk.SetEvent.EventCommandList\"7\n\x10\x45ventCommandList\x12\x08\n\x04NONE\x10\x00\x12\x19\n\x15TOGGLE_HAZARD_BLINKER\x10\x01\x62\x06proto3')
 )
 
 
@@ -34,11 +34,15 @@ _SETEVENT_EVENTCOMMANDLIST = _descriptor.EnumDescriptor(
       name='NONE', index=0, number=0,
       serialized_options=None,
       type=None),
+    _descriptor.EnumValueDescriptor(
+      name='TOGGLE_HAZARD_BLINKER', index=1, number=1,
+      serialized_options=None,
+      type=None),
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=137,
-  serialized_end=165,
+  serialized_start=168,
+  serialized_end=223,
 )
 _sym_db.RegisterEnumDescriptor(_SETEVENT_EVENTCOMMANDLIST)
 
@@ -57,6 +61,13 @@ _HONK_STATUS = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='hazard_blinker_active', full_name='UXDC.Honk.HONK_Status.hazard_blinker_active', index=1,
+      number=2, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -70,7 +81,7 @@ _HONK_STATUS = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=30,
-  serialized_end=66,
+  serialized_end=97,
 )
 
 
@@ -101,8 +112,8 @@ _SETEVENT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=68,
-  serialized_end=165,
+  serialized_start=99,
+  serialized_end=223,
 )
 
 _SETEVENT.fields_by_name['sendevent'].enum_type = _SETEVENT_EVENTCOMMANDLIST
