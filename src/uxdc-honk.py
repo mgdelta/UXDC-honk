@@ -25,7 +25,8 @@ from ecal.core.publisher import ProtoPublisher
 from ecal.core.subscriber import ProtoSubscriber
 
 #sys.path.insert(1, os.path.join(sys.path[0], '../_protobuf'))
-#import person_pb2
+
+import UXDC_Honk_pb2
 
 def main():
   # print eCAL version and date
@@ -38,7 +39,10 @@ def main():
   ecal_core.set_process_state(1, 1, "I feel good")
 
   # create publisher
-  #pub = ProtoPublisher("person", person_pb2.Person)
+  pub_status = ProtoPublisher("UXDC_Honk_Status", UXDC_Honk_pb2.HONK_Status)
+  
+  status = UXDC_Honk_pb2.HONK_Status()
+  status.alive_counter = 0
   
   # create person instance and set content
   #person = person_pb2.Person()
@@ -51,15 +55,13 @@ def main():
   # send messages
   while ecal_core.ok():
   
-    # change person id
-    #person.id = person.id + 1
-  
-    # send person
-    #print("Sending person {}".format(person.id))
-    #pub.send(person)
-  
+    status.alive_counter = status.alive_counter + 1
+    pub_status.send(status)
+    
     # sleep 100 ms
-    time.sleep(0.1)
+    time.sleep(0.5)
+  
+  
   
   # finalize eCAL API
   ecal_core.finalize()
