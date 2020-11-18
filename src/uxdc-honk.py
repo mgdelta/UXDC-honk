@@ -39,16 +39,22 @@ import UXDC_Honk_pb2
 #  print("person email : {}".format(person.email))
 #  print("dog.name     : {}".format(person.dog.name))
 #  print("house.rooms  : {}".format(person.house.rooms))
-def blinker_toggle():
+def blinker_toggle(statuspackage):
   relay_shield.setRelayCh(0, 1, 1)
   time.sleep(0.2)
   relay_shield.setRelayCh(0, 1, 0)
+  statuspackage.hazard_blinker_active = not statuspackage.hazard_blinker_active
+  
+def secure_relay_init():
+  relay_shield.setRelays(0,0)  
 
 
 
 def main():
   # print eCAL version and date
   print("eCAL {} ({})\n".format(ecal_core.getversion(), ecal_core.getdate()))
+  
+  secure_relay_init()
   
   # initialize eCAL API
   ecal_core.initialize(sys.argv, "UXDC-HonkApp")
@@ -61,8 +67,9 @@ def main():
   
   status = UXDC_Honk_pb2.HONK_Status()
   status.alive_counter = 0
+  status.hazard_blinker_active = False
   
-  isblinking = False
+
 
   # create subscriber and connect callback
   #sub = ProtoSubscriber("person", person_pb2.Person)
@@ -73,11 +80,9 @@ def main():
   
     status.alive_counter = status.alive_counter + 1
 
-    blinker_toggle()
-    isblinking = not isblinking
-    print(isblinking)
+    blinker_toggle(status)
+    print(status.hazard_blinker_active)
     
-    status.hazard_blinker_active = isblinking
     
     pub_status.send(status)
     # sleep 100 ms
