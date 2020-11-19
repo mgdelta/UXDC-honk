@@ -31,21 +31,11 @@ import libioplus as relay_shield
 
 import UXDC_Honk_pb2
 
-#def callback(topic_name, person, time):
-#  print("")
-#  print("Received person ..")
-#  print("person id    : {}".format(person.id))
-#  print("person name  : {}".format(person.name))
-#  print("person stype : {}".format(person.stype))
-#  print("person email : {}".format(person.email))
-#  print("dog.name     : {}".format(person.dog.name))
-#  print("house.rooms  : {}".format(person.house.rooms))
-
 
 def blinker_toggle(statuspackage):
-  relay_shield.setRelayCh(0, 1, 1)
+  relay_shield.setRelayCh(0, 3, 1)
   time.sleep(0.4)
-  relay_shield.setRelayCh(0, 1, 0)
+  relay_shield.setRelayCh(0, 3, 0)
   statuspackage.hazard_blinker_active = not statuspackage.hazard_blinker_active
   
 def secure_relay_init():
@@ -60,8 +50,20 @@ def do_send_status(publisher, statuspackage):
 def switch_honk_mode(mode):
   if (mode == True):
     print('Changing Honk mode to UXDC mode...')
+    relay_shield.setRelayCh(0, 1, 1)
+    time.sleep(0.2)   
+    relay_shield.setRelayCh(0, 2, 1)
+    time.sleep(0.4)
+    relay_shield.setRelayCh(0, 4, 1)
   else:
     print('Changing Honk mode to VW mode...')
+    relay_shield.setRelayCh(0, 4, 0)
+    time.sleep(0.4)    
+    relay_shield.setRelayCh(0, 1, 0)
+    time.sleep(0.2)
+    relay_shield.setRelayCh(0, 2, 0)
+
+
     
 def honk_child_warning():
   print('Honk: Warning child left behind')
@@ -92,13 +94,9 @@ def main():
   status = UXDC_Honk_pb2.HONK_Status()
   status.alive_counter = 0
   status.hazard_blinker_active = False
-  status.honk_mode_status = status.UNKNOWN
+  status.honk_mode_status = status.VW_MODE
   
   honk_mode_status = False
-
-  # create subscriber and connect callback
-  #sub = ProtoSubscriber("person", person_pb2.Person)
-  #sub.set_callback(callback)  
   
   sub_honk_trigger = ProtoSubscriber("UXDC_Honk_TriggerEvent", UXDC_Honk_pb2.SetEvent)
   #sub_honk_trigger.set_callback(ecal_callback)
@@ -130,7 +128,7 @@ def main():
     # deserialize person from message buffer
     if ret > 0:
       # print person content
-      print("Received Honk event command ..")
+      #print("Received Honk event command ..")
       print(honkcommand.sendevent)
       
       if honkcommand.sendevent == honkcommand.TOGGLE_HAZARD_BLINKER:
@@ -145,7 +143,9 @@ def main():
         switch_honk_mode(True)
         status.honk_mode_status = status.UXDC_MODE      
       if honkcommand.sendevent == honkcommand.HORN_WARNING_CHILD:
-        print('Vergleich ok -- Warning with Horn: Child Left Behind')   
+        print('Vergleich ok -- Warning with Horn: Child Left Behind')
+        if status.honk_mode_status == status.UXDC_MODE:
+          honk_child_warning()   
 
 
     # sleep 100 ms
