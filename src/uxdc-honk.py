@@ -66,7 +66,12 @@ def switch_honk_mode(mode):
 def honk_child_warning():
   print('Honk: Warning child left behind')
 
-
+def ecal_callback(topic_name, honkcommand, time):
+  print('Hallo von Callback')
+  print(honkcommand.sendevent)
+  if honkcommand.sendevent == honkcommand.TOGGLE_HAZARD_BLINKER:
+    print('Vergleich ok')
+  
 
 def main():
   # print eCAL version and date
@@ -94,6 +99,10 @@ def main():
   # create subscriber and connect callback
   #sub = ProtoSubscriber("person", person_pb2.Person)
   #sub.set_callback(callback)  
+  
+  sub_honk_trigger = ProtoSubscriber("UXDC_Honk_TriggerEvent", UXDC_Honk_pb2.SetEvent)
+  #sub_honk_trigger.set_callback(ecal_callback)
+  
   t = threading.Thread(target=do_send_status, args=[pub_status, status])
   t.start()
   
@@ -101,24 +110,46 @@ def main():
   while ecal_core.ok():
   
 
-    blinker_toggle(status)
+    #blinker_toggle(status)
     #print(status.hazard_blinker_active)
     
     
     #pub_status.send(status)
     #do_send_status(pub_status,status)
     
-    switch_honk_mode(honk_mode_status)
-    honk_mode_status = not honk_mode_status
+    #switch_honk_mode(honk_mode_status)
+    #honk_mode_status = not honk_mode_status
     
-    if honk_mode_status:
-      status.honk_mode_status = status.UXDC_MODE
-    else:
-      status.honk_mode_status = status.VW_MODE
+    #if honk_mode_status:
+    #  status.honk_mode_status = status.UXDC_MODE
+    #else:
+    #  status.honk_mode_status = status.VW_MODE
+
+    ret, honkcommand, time = sub_honk_trigger.receive(500)
+  
+    # deserialize person from message buffer
+    if ret > 0:
+      # print person content
+      print("Received Honk event command ..")
+      print(honkcommand.sendevent)
+      
+      if honkcommand.sendevent == honkcommand.TOGGLE_HAZARD_BLINKER:
+        print('Vergleich ok -- Toggle Hazard Light')
+        blinker_toggle(status)
+      if honkcommand.sendevent == honkcommand.SET_HONK_VW_MODE:
+        print('Vergleich ok -- Set Horn to VW Mode')
+        switch_honk_mode(False)
+        status.honk_mode_status = status.VW_MODE
+      if honkcommand.sendevent == honkcommand.SET_HONK_UXDC_MODE:
+        print('Vergleich ok -- Set Horn to UXDC Mode') 
+        switch_honk_mode(True)
+        status.honk_mode_status = status.UXDC_MODE      
+      if honkcommand.sendevent == honkcommand.HORN_WARNING_CHILD:
+        print('Vergleich ok -- Warning with Horn: Child Left Behind')   
 
 
     # sleep 100 ms
-    time.sleep(1.0)
+    #time.sleep(1.0)
   
   
   

@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='UXDC.Honk',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x0fUXDC_Honk.proto\x12\tUXDC.Honk\"\xb7\x01\n\x0bHONK_Status\x12\x15\n\ralive_counter\x18\x01 \x01(\r\x12\x1d\n\x15hazard_blinker_active\x18\x02 \x01(\x08\x12;\n\x10honk_mode_status\x18\x03 \x01(\x0e\x32!.UXDC.Honk.HONK_Status.eHonk_Mode\"5\n\neHonk_Mode\x12\x0b\n\x07UNKNOWN\x10\x00\x12\x0b\n\x07VW_MODE\x10\x01\x12\r\n\tUXDC_MODE\x10\x02\"|\n\x08SetEvent\x12\x37\n\tsendevent\x18\x01 \x01(\x0e\x32$.UXDC.Honk.SetEvent.EventCommandList\"7\n\x10\x45ventCommandList\x12\x08\n\x04NONE\x10\x00\x12\x19\n\x15TOGGLE_HAZARD_BLINKER\x10\x01\x62\x06proto3')
+  serialized_pb=_b('\n\x0fUXDC_Honk.proto\x12\tUXDC.Honk\"\xb7\x01\n\x0bHONK_Status\x12\x15\n\ralive_counter\x18\x01 \x01(\r\x12\x1d\n\x15hazard_blinker_active\x18\x02 \x01(\x08\x12;\n\x10honk_mode_status\x18\x03 \x01(\x0e\x32!.UXDC.Honk.HONK_Status.eHonk_Mode\"5\n\neHonk_Mode\x12\x0b\n\x07UNKNOWN\x10\x00\x12\x0b\n\x07VW_MODE\x10\x01\x12\r\n\tUXDC_MODE\x10\x02\"\xc2\x01\n\x08SetEvent\x12\x37\n\tsendevent\x18\x01 \x01(\x0e\x32$.UXDC.Honk.SetEvent.EventCommandList\"}\n\x10\x45ventCommandList\x12\x08\n\x04NONE\x10\x00\x12\x19\n\x15TOGGLE_HAZARD_BLINKER\x10\x01\x12\x14\n\x10SET_HONK_VW_MODE\x10\x02\x12\x16\n\x12SET_HONK_UXDC_MODE\x10\x03\x12\x16\n\x12HORN_WARNING_CHILD\x10\x04\x62\x06proto3')
 )
 
 
@@ -64,11 +64,23 @@ _SETEVENT_EVENTCOMMANDLIST = _descriptor.EnumDescriptor(
       name='TOGGLE_HAZARD_BLINKER', index=1, number=1,
       serialized_options=None,
       type=None),
+    _descriptor.EnumValueDescriptor(
+      name='SET_HONK_VW_MODE', index=2, number=2,
+      serialized_options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='SET_HONK_UXDC_MODE', index=3, number=3,
+      serialized_options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='HORN_WARNING_CHILD', index=4, number=4,
+      serialized_options=None,
+      type=None),
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=285,
-  serialized_end=340,
+  serialized_start=286,
+  serialized_end=411,
 )
 _sym_db.RegisterEnumDescriptor(_SETEVENT_EVENTCOMMANDLIST)
 
@@ -146,8 +158,8 @@ _SETEVENT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=216,
-  serialized_end=340,
+  serialized_start=217,
+  serialized_end=411,
 )
 
 _HONK_STATUS.fields_by_name['honk_mode_status'].enum_type = _HONK_STATUS_EHONK_MODE
