@@ -40,9 +40,11 @@ import UXDC_Honk_pb2
 #  print("person email : {}".format(person.email))
 #  print("dog.name     : {}".format(person.dog.name))
 #  print("house.rooms  : {}".format(person.house.rooms))
+
+
 def blinker_toggle(statuspackage):
   relay_shield.setRelayCh(0, 1, 1)
-  time.sleep(0.2)
+  time.sleep(0.4)
   relay_shield.setRelayCh(0, 1, 0)
   statuspackage.hazard_blinker_active = not statuspackage.hazard_blinker_active
   
@@ -55,11 +57,22 @@ def do_send_status(publisher, statuspackage):
     publisher.send(statuspackage)
     time.sleep(0.5)
 
+def switch_honk_mode(mode):
+  if (mode == True):
+    print('Changing Honk mode to UXDC mode...')
+  else:
+    print('Changing Honk mode to VW mode...')
+    
+def honk_child_warning:
+  print('Honk: Warning child left behind')
+
+
 
 def main():
   # print eCAL version and date
   print("eCAL {} ({})\n".format(ecal_core.getversion(), ecal_core.getdate()))
   
+  # make sure all Relays are in off state
   secure_relay_init()
   
   # initialize eCAL API
@@ -75,7 +88,7 @@ def main():
   status.alive_counter = 0
   status.hazard_blinker_active = False
   
-
+  honk_mode_status = False
 
   # create subscriber and connect callback
   #sub = ProtoSubscriber("person", person_pb2.Person)
@@ -86,20 +99,20 @@ def main():
   # send messages
   while ecal_core.ok():
   
-    #status.alive_counter = status.alive_counter + 1
 
     blinker_toggle(status)
-    print(status.hazard_blinker_active)
+    #print(status.hazard_blinker_active)
     
     
     #pub_status.send(status)
     #do_send_status(pub_status,status)
+    
+    switch_honk_mode(honk_mode_status)
+    honk_mode_status = not honk_mode_status
 
-	
-	
-    #t.join()
+
     # sleep 100 ms
-    time.sleep(0.1)
+    time.sleep(1.0)
   
   
   
