@@ -19,6 +19,7 @@
 import os
 import sys
 import time
+import threading
 
 import ecal.core.core as ecal_core
 from ecal.core.publisher import ProtoPublisher
@@ -48,6 +49,11 @@ def blinker_toggle(statuspackage):
 def secure_relay_init():
   relay_shield.setRelays(0,0)  
 
+def do_send_status(publisher, statuspackage):
+  while True:
+    statuspackage.alive_counter = statuspackage.alive_counter + 1
+    publisher.send(statuspackage)
+    time.sleep(0.5)
 
 
 def main():
@@ -74,19 +80,26 @@ def main():
   # create subscriber and connect callback
   #sub = ProtoSubscriber("person", person_pb2.Person)
   #sub.set_callback(callback)  
+  t = threading.Thread(target=do_send_status, args=[pub_status, status])
+  t.start()
   
   # send messages
   while ecal_core.ok():
   
-    status.alive_counter = status.alive_counter + 1
+    #status.alive_counter = status.alive_counter + 1
 
     blinker_toggle(status)
     print(status.hazard_blinker_active)
     
     
-    pub_status.send(status)
+    #pub_status.send(status)
+    #do_send_status(pub_status,status)
+
+	
+	
+    #t.join()
     # sleep 100 ms
-    time.sleep(1.0)
+    time.sleep(0.1)
   
   
   
