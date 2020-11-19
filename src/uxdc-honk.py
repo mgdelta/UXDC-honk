@@ -63,7 +63,7 @@ def switch_honk_mode(mode):
   else:
     print('Changing Honk mode to VW mode...')
     
-def honk_child_warning:
+def honk_child_warning():
   print('Honk: Warning child left behind')
 
 
@@ -87,6 +87,7 @@ def main():
   status = UXDC_Honk_pb2.HONK_Status()
   status.alive_counter = 0
   status.hazard_blinker_active = False
+  status.honk_mode_status = status.UNKNOWN
   
   honk_mode_status = False
 
@@ -109,6 +110,11 @@ def main():
     
     switch_honk_mode(honk_mode_status)
     honk_mode_status = not honk_mode_status
+    
+    if honk_mode_status:
+      status.honk_mode_status = status.UXDC_MODE
+    else:
+      status.honk_mode_status = status.VW_MODE
 
 
     # sleep 100 ms
